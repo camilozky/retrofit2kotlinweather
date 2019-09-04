@@ -21,36 +21,38 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getCurrentData() {
-        val retrofit = Retrofit.Builder()
+        val retrofit: Retrofit = Retrofit.Builder()
                 .baseUrl(BaseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
+
         val service = retrofit.create(WeatherService::class.java)
         val call = service.getCurrentWeatherData(lat, lon, AppId)
+
         call.enqueue(object : Callback<WeatherResponse> {
             override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {
                 if (response.code() == 200) {
                     val weatherResponse = response.body()!!
-
-                    val stringBuilder = "Country: " +
-                            weatherResponse.sys!!.country +
-                            "\n" +
-                            "Temperature: " +
-                            weatherResponse.main!!.temp +
-                            "\n" +
-                            "Temperature(Min): " +
-                            weatherResponse.main!!.temp_min +
-                            "\n" +
-                            "Temperature(Max): " +
-                            weatherResponse.main!!.temp_max +
-                            "\n" +
-                            "Humidity: " +
-                            weatherResponse.main!!.humidity +
-                            "\n" +
-                            "Pressure: " +
-                            weatherResponse.main!!.pressure
-
-                    weatherData.text = stringBuilder
+                    with(weatherResponse) {
+                        val stringBuilder = "Country: " +
+                                sys?.country +
+                                "\n" +
+                                "Temperature: " +
+                                main?.temp +
+                                "\n" +
+                                "Temperature(Min): " +
+                                main?.temp_min +
+                                "\n" +
+                                "Temperature(Max): " +
+                                main?.temp_max +
+                                "\n" +
+                                "Humidity: " +
+                                main?.humidity +
+                                "\n" +
+                                "Pressure: " +
+                                main?.pressure
+                        weatherData.text = stringBuilder
+                    }
                 }
             }
 

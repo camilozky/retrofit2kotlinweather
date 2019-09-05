@@ -3,8 +3,7 @@ package com.example.weather
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_main.button
-import kotlinx.android.synthetic.main.activity_main.textView
+import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -12,11 +11,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var weatherData: TextView
+    private lateinit var NasaData: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        weatherData = textView
+        NasaData = textView
         button.setOnClickListener { getCurrentData() }
     }
 
@@ -26,11 +25,11 @@ class MainActivity : AppCompatActivity() {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
 
-        val service = retrofit.create(WeatherService::class.java)
-        val call = service.getCurrentWeatherData(lat, lon, AppId)
+        val service = retrofit.create(NasaService::class.java)
+        val call = service.getCurrentNasaData(AppId)
 
-        call.enqueue(object : Callback<WeatherResponse> {
-            override fun onResponse(call: Call<WeatherResponse>, response: Response<WeatherResponse>) {
+        call.enqueue(object : Callback<NasaResponse> {
+            override fun onResponse(call: Call<NasaResponse>, response: Response<NasaResponse>) {
                 if (response.code() == 200) {
                     val weatherResponse = response.body()!!
                     with(weatherResponse) {
@@ -51,22 +50,20 @@ class MainActivity : AppCompatActivity() {
                                 "\n" +
                                 "Pressure: " +
                                 main?.pressure
-                        weatherData.text = stringBuilder
+                        NasaData.text = stringBuilder
                     }
                 }
             }
 
-            override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
-                weatherData.text = t.message
+            override fun onFailure(call: Call<NasaResponse>, t: Throwable) {
+                NasaData.text = t.message
             }
         })
     }
 
     companion object {
 
-        var BaseUrl = "http://api.openweathermap.org/"
-        var AppId = "2e65127e909e178d0af311a81f39948c"
-        var lat = "35"
-        var lon = "139"
+        var BaseUrl = "https://api.nasa.gov/planetary/"
+        var AppId = "4V7MxGaddZYLgLj71sYviLo6gxValkgJwNVfUBQl"
     }
 }

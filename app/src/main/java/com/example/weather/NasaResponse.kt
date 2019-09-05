@@ -2,7 +2,7 @@ package com.example.weather
 
 import com.google.gson.annotations.SerializedName
 
-class WeatherResponse {
+class NasaResponse {
 
     @SerializedName("coord")
     var coord: Coord? = null

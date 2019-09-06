@@ -3,6 +3,7 @@ package com.example.weather
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -19,6 +20,7 @@ class MainActivity : AppCompatActivity() {
         button.setOnClickListener { getCurrentData() }
     }
 
+
     private fun getCurrentData() {
         val retrofit: Retrofit = Retrofit.Builder()
                 .baseUrl(BaseUrl)
@@ -31,27 +33,19 @@ class MainActivity : AppCompatActivity() {
         call.enqueue(object : Callback<NasaResponse> {
             override fun onResponse(call: Call<NasaResponse>, response: Response<NasaResponse>) {
                 if (response.code() == 200) {
-                    val weatherResponse = response.body()!!
-                    with(weatherResponse) {
-                        val stringBuilder = "Country: " +
-                                sys?.country +
-                                "\n" +
-                                "Temperature: " +
-                                main?.temp +
-                                "\n" +
-                                "Temperature(Min): " +
-                                main?.temp_min +
-                                "\n" +
-                                "Temperature(Max): " +
-                                main?.temp_max +
-                                "\n" +
-                                "Humidity: " +
-                                main?.humidity +
-                                "\n" +
-                                "Pressure: " +
-                                main?.pressure
-                        NasaData.text = stringBuilder
-                    }
+                    val NasaResponse = response.body()!!
+                    val stringBuilder = "Date: " +
+                            NasaResponse.date +
+                            "\n" +
+                            "Title: " +
+                            NasaResponse.title +
+                            "\n" +
+                            "explanation: " +
+                            NasaResponse.explanation
+                    NasaData.text = stringBuilder
+                    Picasso.get()
+                        .load(NasaResponse.url)
+                        .into(imageView)
                 }
             }
 

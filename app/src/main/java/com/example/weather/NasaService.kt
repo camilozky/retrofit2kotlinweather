@@ -5,9 +5,8 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface NasaService {
-    @GET("data/2.5/weather?")
+    @GET("apod?")
     fun getCurrentNasaData(
-        @Query("lat") lat: String,
-        @Query("lon") lon: String
+        @Query("api_key") app_id: String
     ): Call<NasaResponse>
 }
